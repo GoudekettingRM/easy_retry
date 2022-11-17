@@ -98,5 +98,37 @@ RSpec.describe EasyRetry do
 
     expect(end_time - start_time).to be_within(1).of(expected_diff)
   end
+
+  it "puts the error" do
+    expect($stdout).to receive(:puts).with("Error: StandardError (1/1)")
+
+    expect do
+      1.tries do
+        raise StandardError
+      end
+    end.to raise_error(StandardError)
+  end
+
+  context "when used in a rails app" do
+    let(:logger) { double }
+
+    # rubocop:disable Lint/ConstantDefinitionInBlock
+    before do
+      Rails = double
+      allow(Rails).to receive(:logger).and_return(logger)
+      allow(logger).to receive(:error)
+    end
+    # rubocop:enable Lint/ConstantDefinitionInBlock
+
+    it "logs using the rails logger" do
+      expect(logger).to receive(:error).with("Error: TestError (1/1)")
+
+      expect do
+        1.try(rescue_from: [TestError]) do
+          raise TestError
+        end
+      end.to raise_error(TestError)
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength
