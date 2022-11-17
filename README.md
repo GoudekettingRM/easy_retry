@@ -1,3 +1,5 @@
+![Specs](https://github.com/goudekettingrm/easy_retry/actions/workflows/main.yml/badge.svg)
+
 # EasyRetry
 
 <i>Easily retry a block of code a predetermined number of times.</i>
