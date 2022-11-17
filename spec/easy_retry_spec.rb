@@ -2,6 +2,7 @@
 
 class TestError < StandardError; end
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe EasyRetry do
   it "has a version number" do
     expect(EasyRetry::VERSION).not_to be nil
@@ -98,3 +99,4 @@ RSpec.describe EasyRetry do
     expect(end_time - start_time).to be_within(0.1).of(expected_diff)
   end
 end
+# rubocop:enable Metrics/BlockLength
