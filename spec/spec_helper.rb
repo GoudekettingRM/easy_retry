@@ -2,7 +2,13 @@
 
 require "easy_retry"
 require "simplecov"
-SimpleCov.start
+SimpleCov.start do
+  SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCovSmallBadge::Formatter
+  ])
+
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
