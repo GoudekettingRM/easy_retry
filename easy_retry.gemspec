@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Robin Goudeketting, Peter Duijnstee"]
   spec.email = ["robin@goudeketting.nl"]
 
-  spec.summary = %q(Easily retry a block of code a predetermined number of times)
-  spec.description = %q(Easily retry a block of code a predetermined number of times)
+  spec.summary = "Easily retry a block of code a predetermined number of times"
+  spec.description = "Easily retry a block of code a predetermined number of times"
   spec.homepage = "https://github.com/GoudekettingRM/easy_retry"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
