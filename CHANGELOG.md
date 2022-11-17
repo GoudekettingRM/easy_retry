@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-## [1.0.3] - 2022-11-17
+## [1.0.4] - 2022-11-17
 
 - Bugfix for EasyRetry to work in Rails _and_ non-Rails projects
 
