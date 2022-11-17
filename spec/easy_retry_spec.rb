@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe EasyRetry do
-  class TestError < StandardError; end
+class TestError < StandardError; end
 
+RSpec.describe EasyRetry do
   it "has a version number" do
     expect(EasyRetry::VERSION).not_to be nil
   end
