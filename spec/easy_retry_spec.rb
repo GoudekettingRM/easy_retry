@@ -96,7 +96,7 @@ RSpec.describe EasyRetry do
 
     end_time = Time.now.to_i
 
-    expect(end_time - start_time).to be_within(0.1).of(expected_diff)
+    expect(end_time - start_time).to be_within(1).of(expected_diff)
   end
 end
 # rubocop:enable Metrics/BlockLength
