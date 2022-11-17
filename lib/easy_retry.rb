@@ -8,20 +8,27 @@ class Numeric
 
     max_retry = self
     current_try = 1
+    result = nil
 
     loop do
-      yield(current_try)
+      result = yield(current_try)
 
       break
     rescue *rescue_from => error
-      Rails.logger.error "Error: #{error.message} (#{current_try}/#{max_retry})"
+      if defined?(Rails)
+        Rails.logger.error "Error: #{error.message} (#{current_try}/#{max_retry})"
+      else
+        puts "Error: #{error.message} (#{current_try}/#{max_retry})"
+      end
 
-      sleep (current_try * current_try).seconds
+      sleep current_try * current_try
 
       current_try += 1
 
       raise error if current_try > max_retry
     end
+
+    result
   end
 
   alias try tries
