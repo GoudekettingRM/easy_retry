@@ -2,6 +2,8 @@
 
 require "easy_retry"
 require "simplecov"
+require 'simplecov_small_badge'
+
 SimpleCov.start do
   SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,

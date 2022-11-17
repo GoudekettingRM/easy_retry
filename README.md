@@ -1,4 +1,5 @@
 ![Specs](https://github.com/goudekettingrm/easy_retry/actions/workflows/main.yml/badge.svg)
+![Coverage](https://github.com/goudekettingrm/easy_retry/actions/workflows/main.yml/coverage_badge_total.png)
 
 # EasyRetry
 
