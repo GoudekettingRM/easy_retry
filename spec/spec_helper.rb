@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "easy_retry"
-require 'simplecov'
+require "simplecov"
 SimpleCov.start
 
 RSpec.configure do |config|

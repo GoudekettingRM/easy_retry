@@ -2,9 +2,11 @@
 
 require_relative "easy_retry/version"
 
+# Extend the Numeric class with a #tries method
 class Numeric
+  # rubocop:disable Metrics/MethodLength
   def tries(rescue_from: [StandardError])
-    raise ArgumentError, 'No block given' unless block_given?
+    raise ArgumentError, "No block given" unless block_given?
 
     max_retry = self
     current_try = 1
@@ -14,22 +16,23 @@ class Numeric
       result = yield(current_try)
 
       break
-    rescue *rescue_from => error
+    rescue *rescue_from => e
       if defined?(Rails)
-        Rails.logger.error "Error: #{error.message} (#{current_try}/#{max_retry})"
+        Rails.logger.error "Error: #{e.message} (#{current_try}/#{max_retry})"
       else
-        puts "Error: #{error.message} (#{current_try}/#{max_retry})"
+        puts "Error: #{e.message} (#{current_try}/#{max_retry})"
       end
 
       sleep current_try * current_try
 
       current_try += 1
 
-      raise error if current_try > max_retry
+      raise e if current_try > max_retry
     end
 
     result
   end
+  # rubocop:enable Metrics/MethodLength
 
   alias try tries
 end
