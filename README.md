@@ -1,5 +1,7 @@
 ![Specs](https://github.com/goudekettingrm/easy_retry/actions/workflows/main.yml/badge.svg)
 
+<a href="https://www.buymeacoffee.com/goudekettingrm" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-blue.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 # EasyRetry
 
 <i>Easily retry a block of code a predetermined number of times.</i>
