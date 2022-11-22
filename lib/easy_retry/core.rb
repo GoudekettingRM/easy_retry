@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Extend the Numeric class with a #tries method
 class Numeric
   # rubocop:disable Metrics/MethodLength
