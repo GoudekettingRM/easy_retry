@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "easy_retry/version"
+require_relative 'easy_retry/version'
 
 # Extend the Numeric class with a #tries method
 class Numeric
   # rubocop:disable Metrics/MethodLength
   def tries(rescue_from: [StandardError])
-    raise ArgumentError, "No block given" unless block_given?
+    raise ArgumentError, 'No block given' unless block_given?
 
     rescue_from = Array(rescue_from)
     max_retry = self
