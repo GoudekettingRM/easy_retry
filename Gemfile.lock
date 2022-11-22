@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    easy_retry (1.0.5)
+    easy_retry (1.0.6)
       logger (~> 1.5.1)
 
 GEM
