@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 require_relative 'easy_retry/version'
+require_relative 'easy_retry/configuration'
+
+module EasyRetry
+  class << self
+    delegate :logger, :logger=, to: :configuration
+
+    def configuration
+      @configuration ||= EasyRetry::Configuration.new
+    end
+
+    def configure
+      yield(configuration)
+    end
+  end
+end
 
 # Extend the Numeric class with a #tries method
 class Numeric
@@ -18,11 +33,7 @@ class Numeric
 
       break
     rescue *rescue_from => e
-      if defined?(Rails)
-        Rails.logger.error "Error: #{e.message} (#{current_try}/#{max_retry})"
-      else
-        puts "Error: #{e.message} (#{current_try}/#{max_retry})"
-      end
+      EasyRetry.configuration.logger.info "Error: #{e.message} (#{current_try}/#{max_retry})"
 
       raise if current_try >= max_retry
 
