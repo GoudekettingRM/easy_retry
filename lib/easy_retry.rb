@@ -6,14 +6,16 @@ require_relative 'easy_retry/configuration'
 
 module EasyRetry
   class << self
-    delegate :logger, to: :configuration
-
     def configuration
       @configuration ||= EasyRetry::Configuration.new
     end
 
     def configure
       yield(configuration)
+    end
+
+    def logger
+      configuration.logger
     end
   end
 end
