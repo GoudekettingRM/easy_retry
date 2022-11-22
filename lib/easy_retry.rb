@@ -8,6 +8,7 @@ class Numeric
   def tries(rescue_from: [StandardError])
     raise ArgumentError, "No block given" unless block_given?
 
+    rescue_from = Array(rescue_from)
     max_retry = self
     current_try = 1
     result = nil
@@ -23,11 +24,11 @@ class Numeric
         puts "Error: #{e.message} (#{current_try}/#{max_retry})"
       end
 
+      raise if current_try >= max_retry
+
       sleep current_try * current_try
 
       current_try += 1
-
-      raise e if current_try > max_retry
     end
 
     result

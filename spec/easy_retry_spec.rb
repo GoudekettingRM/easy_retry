@@ -85,7 +85,7 @@ RSpec.describe EasyRetry do
   end
 
   it "sleeps for the current try squared" do
-    expected_diff = 1 + 4 + 9 + 16
+    expected_diff = 1 + 4 + 9
     start_time = Time.now.to_i
 
     expect do
@@ -97,6 +97,21 @@ RSpec.describe EasyRetry do
     end_time = Time.now.to_i
 
     expect(end_time - start_time).to be_within(1).of(expected_diff)
+  end
+
+  context 'when passing in a single error' do
+    it 'behaves the same as passing in an array' do
+      counter = 0
+
+      expect do
+        2.tries(rescue_from: TestError) do
+          counter += 1
+          raise TestError
+        end
+      end.to raise_error(TestError)
+
+      expect(counter).to eq 2
+    end
   end
 
   it "puts the error" do

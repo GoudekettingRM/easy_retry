@@ -1,4 +1,10 @@
-## [Unreleased]
+## [Released]
+
+## [1.0.5] - 2022-11-22
+
+- Raise before sleeping to not sleep for try^2 seconds before raising on the last try.
+- Allow passing of single error
+- Expand ReadMe
 
 ## [1.0.4] - 2022-11-17
 
