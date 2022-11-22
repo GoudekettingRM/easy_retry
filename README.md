@@ -69,6 +69,38 @@ The code above will not rescue from the `ActiveRecord::RecordInvalid` error and 
   from (pry):16:in `block in __pry__'
 ```
 
+Passing an array is not necessary if you need to only rescue from a single error
+
+```rb
+  4.tries(rescue_from: ZeroDivisionError) do |try|
+    raise ZeroDivisionError if try < 2
+    raise ActiveRecord::RecordInvalid if try < 4
+    puts "Success!"
+  end
+```
+
+This will generate the same output.
+
+## Block results
+
+EasyRetry gives you back the result of the first time the block you passed successfully runs. This can be useful when you need to use the result of the block for other tasks that you do not necessarily want to place in the block.
+
+```rb
+  result = 2.tries do |try|
+    raise 'Woops' if try < 2
+    "This is try number #{try}"
+  end
+
+  puts result
+```
+
+The code above will produce the following output.
+
+```
+  Error: Woops (1/2)
+  => "This is try number 2"
+```
+
 ## Retry delay
 
 The delay for each retry is based on the iteration count. The delay after each failed attempt is _n^2_, where _n_ is the current iteration that failed. E.g. after the first try, EasyRetry waits 1 second, after the second try it waits 4 seconds, then 9, then 16, then 25, then 36, etc.
@@ -81,7 +113,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/goudekettingrm/easy_retry. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/goudekettingrm/easy_retry/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/GoudekettingRM/easy_retry. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/GoudekettingRM/easy_retry/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -89,4 +121,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the EasyRetry project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/easy_retry/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the EasyRetry project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/GoudekettingRM/easy_retry/blob/main/CODE_OF_CONDUCT.md).
