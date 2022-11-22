@@ -5,7 +5,7 @@ require_relative 'easy_retry/configuration'
 
 module EasyRetry
   class << self
-    delegate :logger, :logger=, to: :configuration
+    delegate :logger, to: :configuration
 
     def configuration
       @configuration ||= EasyRetry::Configuration.new

@@ -2,7 +2,7 @@ require 'logger'
 
 module EasyRetry
   class Configuration
-    attr_writer :logger
+    attr_accessor :logger
 
     def initialize
       @logger = Logger.new(STDOUT)
