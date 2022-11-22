@@ -1,39 +1,22 @@
 # frozen_string_literal: true
 
+require_relative 'easy_retry/core'
 require_relative 'easy_retry/version'
+require_relative 'easy_retry/configuration'
 
-# Extend the Numeric class with a #tries method
-class Numeric
-  # rubocop:disable Metrics/MethodLength
-  def tries(rescue_from: [StandardError])
-    raise ArgumentError, 'No block given' unless block_given?
-
-    rescue_from = Array(rescue_from)
-    max_retry = self
-    current_try = 1
-    result = nil
-
-    loop do
-      result = yield(current_try)
-
-      break
-    rescue *rescue_from => e
-      if defined?(Rails)
-        Rails.logger.error "Error: #{e.message} (#{current_try}/#{max_retry})"
-      else
-        puts "Error: #{e.message} (#{current_try}/#{max_retry})"
-      end
-
-      raise if current_try >= max_retry
-
-      sleep current_try * current_try
-
-      current_try += 1
+# EasyRetry core module
+module EasyRetry
+  class << self
+    def configuration
+      @configuration ||= EasyRetry::Configuration.new
     end
 
-    result
-  end
-  # rubocop:enable Metrics/MethodLength
+    def configure
+      yield(configuration)
+    end
 
-  alias try tries
+    def logger
+      configuration.logger
+    end
+  end
 end

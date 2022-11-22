@@ -101,6 +101,27 @@ The code above will produce the following output.
   => "This is try number 2"
 ```
 
+## Configuration
+
+You can configure EasyRetry by adding an initializer as follows:
+
+```rb
+  EasyRetry.configure do |config|
+    # configuration options
+  end
+```
+
+### Logger
+
+By default, EasyRetry uses [logger](https://rubygems.org/gems/logger) for logging errors. You can add your custom logger in the configuration using the `config.logger` option.
+
+```rb
+  # For Example, using Rails.logger
+  config.logger = Rails.logger
+```
+
+NB: The logger should follow Rails Logger conventions.
+
 ## Retry delay
 
 The delay for each retry is based on the iteration count. The delay after each failed attempt is _n^2_, where _n_ is the current iteration that failed. E.g. after the first try, EasyRetry waits 1 second, after the second try it waits 4 seconds, then 9, then 16, then 25, then 36, etc.

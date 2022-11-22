@@ -5,7 +5,7 @@ class TestError < StandardError; end
 # rubocop:disable Metrics/BlockLength
 RSpec.describe EasyRetry do
   it 'has a version number' do
-    expect(EasyRetry::VERSION).not_to be nil
+    expect(described_class::VERSION).not_to be nil
   end
 
   it 'reruns the specified number of times if the code errors' do
@@ -114,35 +114,43 @@ RSpec.describe EasyRetry do
     end
   end
 
-  it 'puts the error' do
-    expect($stdout).to receive(:puts).with('Error: StandardError (1/1)')
-
-    expect do
-      1.tries do
-        raise StandardError
-      end
-    end.to raise_error(StandardError)
+  it 'is possible to provide config options' do
+    described_class.configure do |c|
+      expect(c).to eq(described_class.configuration)
+    end
   end
 
-  context 'when used in a rails app' do
-    let(:logger) { double }
+  context 'logging' do
+    context 'using the default logger' do
+      it 'logs the error' do
+        expect_any_instance_of(Logger).to receive(:info).with('Error: StandardError (1/1)')
 
-    # rubocop:disable Lint/ConstantDefinitionInBlock
-    before do
-      Rails = double
-      allow(Rails).to receive(:logger).and_return(logger)
-      allow(logger).to receive(:error)
+        expect do
+          1.tries do
+            raise StandardError
+          end
+        end.to raise_error(StandardError)
+      end
     end
-    # rubocop:enable Lint/ConstantDefinitionInBlock
 
-    it 'logs using the rails logger' do
-      expect(logger).to receive(:error).with('Error: TestError (1/1)')
+    context 'using a custom logger' do
+      let(:super_custom_logger) { instance_double(Logger) }
 
-      expect do
-        1.try(rescue_from: [TestError]) do
-          raise TestError
+      before do
+        described_class.configure do |config|
+          config.logger = super_custom_logger
         end
-      end.to raise_error(TestError)
+      end
+
+      it 'logs using that logger' do
+        expect(super_custom_logger).to receive(:info).with('Error: TestError (1/1)')
+
+        expect do
+          1.try(rescue_from: [TestError]) do
+            raise TestError
+          end
+        end.to raise_error(TestError)
+      end
     end
   end
 end
