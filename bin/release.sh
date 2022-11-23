@@ -23,6 +23,8 @@ if [ -n "$1" ]; then
 
   gem build easy_retry.gemspec
   gem push easy_retry-$1.gem
+
+  mv easy_retry-$1.gem pkg/easy_retry-$1.gem
 else
   echo "Usage: $0 <version>"
 fi

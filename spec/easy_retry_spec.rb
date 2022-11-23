@@ -123,7 +123,7 @@ RSpec.describe EasyRetry do
   context 'logging' do
     context 'using the default logger' do
       it 'logs the error' do
-        expect_any_instance_of(Logger).to receive(:info).with('Error: StandardError (1/1)')
+        expect_any_instance_of(Logger).to receive(:info).with('StandardError: StandardError (1/1)')
 
         expect do
           1.tries do
@@ -143,7 +143,7 @@ RSpec.describe EasyRetry do
       end
 
       it 'logs using that logger' do
-        expect(super_custom_logger).to receive(:info).with('Error: TestError (1/1)')
+        expect(super_custom_logger).to receive(:info).with('TestError: TestError (1/1)')
 
         expect do
           1.try(rescue_from: [TestError]) do
