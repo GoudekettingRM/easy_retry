@@ -9,7 +9,7 @@ if [ -n "$1" ]; then
   git pull
 
   # Update version in lib/easy_retry/version.rb
-  sed -i '' -e "s/\(VERSION = \).*/\1\"$1\"/" lib/easy_retry/version.rb
+  sed -i '' -e "s/\(VERSION = \).*/\1\'$1\'/" lib/easy_retry/version.rb
   git commit -am "Prepare for release $1"
 
   git tag $1
