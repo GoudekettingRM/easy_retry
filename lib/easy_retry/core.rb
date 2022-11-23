@@ -16,7 +16,7 @@ class Numeric
 
       break
     rescue *rescue_from => e
-      EasyRetry.logger.info "Error: #{e.message} (#{current_try}/#{max_retry})"
+      EasyRetry.logger.info "#{e.class.name}: #{e.message} (#{current_try}/#{max_retry})"
 
       raise if current_try >= max_retry
 
