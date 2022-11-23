@@ -43,9 +43,9 @@ If you're not using Bundler, you'll need to require the gem in your code:
 The code above will produce the following output:
 
 ```
-  Error: Something went wrong (1/4)
-  Error: Something went wrong (2/4)
-  Error: Something went wrong (3/4)
+  RuntimeError: Something went wrong (1/4)
+  RuntimeError: Something went wrong (2/4)
+  RuntimeError: Something went wrong (3/4)
   Success!
 ```
 
@@ -55,7 +55,7 @@ Sometimes you want to only retry your code if a specific exception is raised. Yo
 
 ```rb
   4.tries(rescue_from: [ZeroDivisionError, ArgumentError]) do |try|
-    raise ZeroDivisionError if try < 2
+    raise ZeroDivisionError, 'Whoops' if try < 2
     raise ActiveRecord::RecordInvalid if try < 4
     puts "Success!"
   end
@@ -64,9 +64,8 @@ Sometimes you want to only retry your code if a specific exception is raised. Yo
 The code above will not rescue from the `ActiveRecord::RecordInvalid` error and produce the following output:
 
 ```
-  Error: ZeroDivisionError (1/4)
+  ZeroDivisionError: Whoops (1/4)
   ActiveRecord::RecordInvalid: Record invalid
-  from (pry):16:in `block in __pry__'
 ```
 
 Passing an array is not necessary if you need to only rescue from a single error
@@ -97,7 +96,7 @@ EasyRetry gives you back the result of the first time the block you passed succe
 The code above will produce the following output.
 
 ```
-  Error: Woops (1/2)
+  RuntimeError: Woops (1/2)
   => "This is try number 2"
 ```
 
