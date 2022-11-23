@@ -1,8 +1,10 @@
 ## [Unreleased]
 
-- Log the error class rather than `Error`.
-
 ## [Released]
+
+## [1.0.7] - 2022-11-23
+
+- Log the error class rather than `Error`.
 
 ## [1.0.6] - 2022-11-22
 
