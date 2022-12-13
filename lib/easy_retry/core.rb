@@ -16,20 +16,9 @@ class Numeric
 
       break
     rescue *rescue_from => e
-      message = e.message == e.class.name ? ' ' : ": #{e.message} "
+      log_failed_try(e, current_try, max_retry)
 
-      if current_try >= max_retry
-        EasyRetry.logger.info "FAILED Permanently after #{max_retry} tries; #{e.class.name}#{message}".strip
-        raise
-      else
-        EasyRetry.logger.info "#{e.class.name}#{message}(Try Number #{current_try}/#{max_retry})"
-      end
-
-      if delay.is_a?(Proc)
-        delay.call(current_try)
-      else
-        EasyRetry.delay_options[delay].call(current_try)
-      end
+      call_delay(delay, current_try)
 
       current_try += 1
     end
@@ -39,4 +28,23 @@ class Numeric
   # rubocop:enable Metrics/MethodLength
 
   alias try tries
+
+  private
+
+  def call_delay(delay, current_try)
+    return delay.call(current_try) if delay.is_a?(Proc)
+
+    EasyRetry.delay_options[delay].call(current_try)
+  end
+
+  def log_failed_try(error, current_try, max_retry)
+    message = error.message == error.class.name ? ' ' : ": #{error.message} "
+
+    if current_try >= max_retry
+      EasyRetry.logger.info "FAILED Permanently after #{max_retry} tries; #{error.class.name}#{message}".strip
+      raise
+    else
+      EasyRetry.logger.info "#{error.class.name}#{message}(Try Number #{current_try}/#{max_retry})"
+    end
+  end
 end
