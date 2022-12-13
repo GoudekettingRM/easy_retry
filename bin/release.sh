@@ -22,7 +22,10 @@ if [ -n "$1" ]; then
   git push
 
   gem build easy_retry.gemspec
-  gem push easy_retry-$1.gem
+
+  echo 'Enter OTP: '
+  read otp
+  gem push easy_retry-$1.gem --otp $otp
 
   mv easy_retry-$1.gem pkg/easy_retry-$1.gem
 else
