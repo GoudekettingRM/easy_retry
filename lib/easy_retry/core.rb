@@ -19,7 +19,7 @@ class Numeric
       message = e.message == e.class.name ? ' ' : ": #{e.message} "
 
       if current_try >= max_retry
-        EasyRetry.logger.info "FAILED Permanently after #{max_retry}/#{max_retry} tries; #{e.class.name}#{message}"
+        EasyRetry.logger.info "FAILED Permanently after #{max_retry} tries; #{e.class.name}#{message}".strip
         raise
       else
         EasyRetry.logger.info "#{e.class.name}#{message}(Try Number #{current_try}/#{max_retry})"
