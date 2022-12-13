@@ -2,7 +2,7 @@
 
 ## [Released]
 
-## [1.0.8] - 2022-12-12
+## [1.0.8] - 2022-12-13
 
 - Add delay configuration
 
