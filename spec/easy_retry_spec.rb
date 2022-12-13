@@ -143,7 +143,9 @@ RSpec.describe EasyRetry do
 
         it 'logs using that logger' do
           expect(super_custom_logger).to receive(:info).with('TestError (Try Number 1/2)').exactly(:once)
-          expect(super_custom_logger).to receive(:info).with('FAILED Permanently after 2 tries; TestError').exactly(:once)
+          expect(super_custom_logger).to receive(:info).with(
+            'FAILED Permanently after 2 tries; TestError'
+          ).exactly(:once)
 
           expect do
             2.tries(rescue_from: [TestError]) do
