@@ -28,16 +28,16 @@ Or install it yourself as:
 
 If you're not using Bundler, you'll need to require the gem in your code:
 ```rb
-  require 'easy_retry'
+require 'easy_retry'
 ```
 
 ### Basic Example
 
 ```rb
-  4.tries do |try|
-    raise 'Something went wrong' if try < 4
-    puts "Success!"
-  end
+4.tries do |try|
+  raise 'Something went wrong' if try < 4
+  puts "Success!"
+end
 ```
 
 The code above will produce the following output:
@@ -54,11 +54,11 @@ The code above will produce the following output:
 Sometimes you want to only retry your code if a specific exception is raised. You can do this by passing a list of exceptions to the #tries method:
 
 ```rb
-  4.tries(rescue_from: [ZeroDivisionError, ArgumentError]) do |try|
-    raise ZeroDivisionError, 'Whoops' if try < 2
-    raise ActiveRecord::RecordInvalid if try < 4
-    puts "Success!"
-  end
+4.tries(rescue_from: [ZeroDivisionError, ArgumentError]) do |try|
+  raise ZeroDivisionError, 'Whoops' if try < 2
+  raise ActiveRecord::RecordInvalid if try < 4
+  puts "Success!"
+end
 ```
 
 The code above will not rescue from the `ActiveRecord::RecordInvalid` error and produce the following output:
@@ -71,11 +71,11 @@ The code above will not rescue from the `ActiveRecord::RecordInvalid` error and 
 Passing an array is not necessary if you need to only rescue from a single error
 
 ```rb
-  4.tries(rescue_from: ZeroDivisionError) do |try|
-    raise ZeroDivisionError if try < 2
-    raise ActiveRecord::RecordInvalid if try < 4
-    puts "Success!"
-  end
+4.tries(rescue_from: ZeroDivisionError) do |try|
+  raise ZeroDivisionError if try < 2
+  raise ActiveRecord::RecordInvalid if try < 4
+  puts "Success!"
+end
 ```
 
 This will generate the same output.
@@ -85,19 +85,54 @@ This will generate the same output.
 EasyRetry gives you back the result of the first time the block you passed successfully runs. This can be useful when you need to use the result of the block for other tasks that you do not necessarily want to place in the block.
 
 ```rb
-  result = 2.tries do |try|
-    raise 'Woops' if try < 2
-    "This is try number #{try}"
-  end
+result = 2.tries do |try|
+  raise 'Woops' if try < 2
+  "This is try number #{try}"
+end
 
-  puts result
+puts result
 ```
 
 The code above will produce the following output.
 
 ```
-  RuntimeError: Woops (1/2)
-  => "This is try number 2"
+RuntimeError: Woops (1/2)
+=> "This is try number 2"
+```
+
+## Custom delay
+
+EasyRetry allows you to set the delay algorithm you want to use every time you call the `#tries` method. The following predefined options exist: `:none`, `:by_try`, `:default`, `:exponential`.
+
+__*:none*__
+
+After a try fails, EasyRetry will not wait and try again immediately.
+
+__*:by_try*__
+
+After a try fails, EasyRetry will wait an equal amount of seconds to current try that failed. I.e. 1 second for try one, 2 for try two, 3 for try three, etc.
+
+__*:default*__
+
+After a try fails, EasyRetry will wait _n^2_, where _n_ is the current try that failed.
+
+__*:exponential*__
+
+After a try fails, EasyRetry will wait _2^n_, where _n_ is the current try that failed.
+
+### Usage
+You can use the predefined delay algorithms as follows:
+```rb
+3.tries(delay: :none) do
+  raise StandardError
+end
+```
+
+You can also define a custom lambda function if the predefined options are not meeting your needs. You can use it like this:
+```rb
+3.tries(delay: ->(current_try) { sleep current_try * 9.81 }) do
+  raise StandardError
+end
 ```
 
 ## Configuration
@@ -105,9 +140,9 @@ The code above will produce the following output.
 You can configure EasyRetry by adding an initializer as follows:
 
 ```rb
-  EasyRetry.configure do |config|
-    # configuration options
-  end
+EasyRetry.configure do |config|
+  # configuration options
+end
 ```
 
 ### Logger
@@ -115,11 +150,24 @@ You can configure EasyRetry by adding an initializer as follows:
 By default, EasyRetry uses [logger](https://rubygems.org/gems/logger) for logging errors. You can add your custom logger in the configuration using the `config.logger` option.
 
 ```rb
-  # For Example, using Rails.logger
-  config.logger = Rails.logger
+# For Example, using Rails.logger
+config.logger = Rails.logger
 ```
 
 NB: The logger should follow Rails Logger conventions.
+
+### Default Delay Algorithm
+By default the `:default` delay algorithm (_n^2_) is used, what's in a name you could say. You can configure the default delay algorithm through the config as follows:
+
+```rb
+config.delay_algorithm = :default # Or :none, :by_try, :exponential
+```
+
+Of course, also here you can instead use a custom lambda delay:
+
+```rb
+config.delay_algorithm = ->(current_try) { sleep current_try * 9.81 }
+```
 
 ## Retry delay
 

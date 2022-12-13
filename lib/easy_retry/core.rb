@@ -3,7 +3,7 @@
 # Extend the Numeric class with a #tries method
 class Numeric
   # rubocop:disable Metrics/MethodLength
-  def tries(rescue_from: [StandardError])
+  def tries(rescue_from: [StandardError], delay: EasyRetry.delay_algorithm)
     raise ArgumentError, 'No block given' unless block_given?
 
     rescue_from = Array(rescue_from)
@@ -16,11 +16,20 @@ class Numeric
 
       break
     rescue *rescue_from => e
-      EasyRetry.logger.info "#{e.class.name}: #{e.message} (#{current_try}/#{max_retry})"
+      message = e.message == e.class.name ? ' ' : ": #{e.message} "
 
-      raise if current_try >= max_retry
+      if current_try >= max_retry
+        EasyRetry.logger.info "FAILED Permanently after #{max_retry}/#{max_retry} tries; #{e.class.name}#{message}"
+        raise
+      else
+        EasyRetry.logger.info "#{e.class.name}#{message}(Try Number #{current_try}/#{max_retry})"
+      end
 
-      sleep current_try * current_try
+      if delay.is_a?(Proc)
+        delay.call(current_try)
+      else
+        EasyRetry.delay_options[delay].call(current_try)
+      end
 
       current_try += 1
     end

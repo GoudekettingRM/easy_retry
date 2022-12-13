@@ -2,6 +2,10 @@
 
 ## [Released]
 
+## [1.0.8] - 2022-12-12
+
+- Add delay configuration
+
 ## [1.0.7] - 2022-11-23
 
 - Log the error class rather than `Error`.
